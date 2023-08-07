@@ -1,0 +1,32 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+prefect = "==2.11.0"
+mlflow = "==2.4.1"
+scikit-learn = "==1.2.2"
+boto3 = "*"
+pandas = "*"
+ipython = "*"
+pyarrow = "*"
+s3fs = "*"
+hyperopt = "*"
+xgboost = "*"
+
+[dev-packages]
+pytest = "*"
+localstack = "*"
+deepdiff = "*"
+awscli = "*"
+pylint = "*"
+black = "*"
+isort = "*"
+pre-commit = "*"
+jupyter = "*"
+awscli-local = "*"
+
+[requires]
+python_version = "3.9"
+python_full_version = "3.9.16"

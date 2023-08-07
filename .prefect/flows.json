@@ -1,0 +1,3 @@
+{
+  "pipeline-flow": "orchestration/training_orchestrator.py:pipeline_flow"
+}
