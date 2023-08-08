@@ -11,14 +11,20 @@ from sklearn.feature_extraction import DictVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 
-from utils import (  # pylint: disable=import-error
+from orchestration.utils import (  # pylint: disable=import-error
     pull_file_from_s3,
     resolve_s3_location,
     get_all_files_from_s3,
 )
+
 from prefect import variables, flow, task
 
-from constants import MLFLOW_EXPERIMENT_NAME, MLFLOW_TRACKING_URI, MLFLOW_MODEL_NAME
+from orchestration.constants import (  # pylint: disable=import-error
+    MLFLOW_EXPERIMENT_NAME,
+    MLFLOW_TRACKING_URI,
+    MLFLOW_MODEL_NAME,
+    StatusEnum
+)
 
 
 logging.basicConfig(
@@ -181,9 +187,9 @@ def move_latest_model_to_registry(experiment_id, mlflow_run_id):
 
     for each_registry in registry_list:
         for each_model in each_registry.latest_versions:
-            if each_model.current_stage == "Production":
+            if each_model.current_stage == StatusEnum.PRODUCTION:
                 client.transition_model_version_stage(
-                    name=MLFLOW_MODEL_NAME, version=each_model.version, stage="Staging"
+                    name=MLFLOW_MODEL_NAME, version=each_model.version, stage=StatusEnum.STAGING
                 )
 
     print("Existing model is moved to Staging.")
@@ -209,7 +215,7 @@ def move_latest_model_to_registry(experiment_id, mlflow_run_id):
             client.transition_model_version_stage(
                 name=model_details.name,
                 version=model_details.version,
-                stage="Production",
+                stage=StatusEnum.PRODUCTION
             )
 
 
