@@ -11,5 +11,12 @@
 
     -- prefect deploy command
 
+    -- mlflow server start command
+
+    mlflow server --backend-store-uri=sqlite:///mlflow.db --default-artifact-root=s3://mlflow-artifacts-remote-amogh/auction-prediction-experiment/
+
+    -- prefect deploy command
+
+    prefect deploy -n ipl-auction-prediction
 
 ```
