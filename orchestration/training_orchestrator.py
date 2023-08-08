@@ -172,7 +172,7 @@ def train_ml_model(train, valid, y_val, dict_vectorizer):
         with open("preprocessor.b", "wb") as f_out:
             pickle.dump(dict_vectorizer, f_out)
 
-        mlflow.log_artifact("models/preprocessor.b", artifact_path="preprocessor")
+        mlflow.log_artifact("preprocessor.b", artifact_path="preprocessor")
 
         mlflow.xgboost.log_model(booster, artifact_path="models_mlflow")
 
