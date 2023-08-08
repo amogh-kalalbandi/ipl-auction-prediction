@@ -169,7 +169,7 @@ def train_ml_model(train, valid, y_val, dict_vectorizer):
         rmse = mean_squared_error(y_val, y_pred, squared=False)
         mlflow.log_metric("rmse", rmse)
 
-        with open("models/preprocessor.b", "wb") as f_out:
+        with open("preprocessor.b", "wb") as f_out:
             pickle.dump(dict_vectorizer, f_out)
 
         mlflow.log_artifact("models/preprocessor.b", artifact_path="preprocessor")
