@@ -36,7 +36,10 @@ def get_model_from_mlflow_registry(mlflow_client):
     for each_registry in registry_list:
         for each_model in each_registry.latest_versions:
             if each_model.current_stage == StatusEnum.PRODUCTION:
-                model = pyfunc.load_model(f"runs:/{each_model.run_id}/models_mlflow")
+                model_run_id = each_model.run_id
+                model = pyfunc.load_model(f"runs:/{model_run_id}/models_mlflow")
+
+    mlflow_client.download_artifacts(run_id=model_run_id, path='preprocessor', dst_path='.')
 
     return model
 
@@ -106,7 +109,7 @@ def predict_auction_amount(filename_list, booster):
     ]
 
     print(prediction_df.shape)
-    import ipdb; ipdb.set_trace()
+    # import ipdb; ipdb.set_trace()
 
     dictionary_vector = DictVectorizer()
     pred_dicts = prediction_df[categorical + numerical].to_dict(orient='records')
