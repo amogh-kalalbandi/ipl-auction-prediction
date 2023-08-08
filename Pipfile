@@ -26,6 +26,7 @@ isort = "*"
 pre-commit = "*"
 jupyter = "*"
 awscli-local = "*"
+ipdb = "*"
 
 [requires]
 python_version = "3.9"

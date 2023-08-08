@@ -7,7 +7,7 @@ from prefect import variables
 
 from sklearn.feature_extraction import DictVectorizer
 
-from utils import (  # pylint: disable=import-error
+from orchestration.utils import (  # pylint: disable=import-error
     pull_file_from_s3,
     resolve_s3_location,
     get_all_files_from_s3
@@ -59,6 +59,7 @@ def pull_prediction_data_from_s3():
     )
 
     s3_filename_list.sort(reverse=True)
+    local_filename_list = []
     print(f'Filename list in S3 bucket = {s3_filename_list}')
     if s3_filename_list:
         training_file_local_path = f"tmp/{s3_filename_list[0]}"
@@ -68,12 +69,14 @@ def pull_prediction_data_from_s3():
             training_file_local_path,
             is_environment_local
         )
+        local_filename_list.append(training_file_local_path)
 
-    return s3_filename_list
+    return local_filename_list
 
 
 def predict_auction_amount(filename_list, booster):
     """Predict auction amount"""
+    print(f'filename list = {filename_list}')
     prediction_df = pd.DataFrame()
     for each_filename in filename_list:
         temp_df = pd.read_csv(each_filename)
@@ -102,6 +105,9 @@ def predict_auction_amount(filename_list, booster):
         'total_matches',
     ]
 
+    print(prediction_df.shape)
+    import ipdb; ipdb.set_trace()
+
     dictionary_vector = DictVectorizer()
     pred_dicts = prediction_df[categorical + numerical].to_dict(orient='records')
     X_test = dictionary_vector.fit_transform(pred_dicts)  # pylint: disable=invalid-name
@@ -116,6 +122,7 @@ def predict_auction_amount(filename_list, booster):
     auction_result_df['prediction_result'] = abs(auction_result_df['difference']).between(50000, 20000000)
 
     auction_result_df.to_csv('auction_result_data.csv', index=False)
+    return auction_result_df
 
 
 def update_rmse_value():

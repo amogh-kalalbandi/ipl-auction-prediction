@@ -1,6 +1,6 @@
 """Prefect Training pipeline."""
 import logging
-
+import pickle
 import pandas as pd
 import xgboost as xgb
 import mlflow
@@ -88,7 +88,7 @@ def get_input_files_from_s3():
 
 
 @task(log_prints=True, name="Prepare Input dictionary vectorizers.")
-def prepare_dictionary_vectorizers(filename_list):
+def prepare_dictionary_vectorizers(filename_list):  # pylint: disable=too-many-locals
     """Prepare dv dictionaries for model training."""
 
     # Prepare the training dataframe.
@@ -136,11 +136,11 @@ def prepare_dictionary_vectorizers(filename_list):
     train = xgb.DMatrix(X_train, label=y_train)
     valid = xgb.DMatrix(X_val, label=y_val)
 
-    return {"train": train, "valid": valid, "y_val": y_val}
+    return {"train": train, "valid": valid, "y_val": y_val, "dict_vectorizer": dict_vectorizer}
 
 
 @task(log_prints=True, name="Train the ML model")
-def train_ml_model(train, valid, y_val):
+def train_ml_model(train, valid, y_val, dict_vectorizer):
     """Train ML model with dv dictionaries."""
     # Track the run in mlflow.
     with mlflow.start_run() as run:
@@ -168,6 +168,11 @@ def train_ml_model(train, valid, y_val):
 
         rmse = mean_squared_error(y_val, y_pred, squared=False)
         mlflow.log_metric("rmse", rmse)
+
+        with open("models/preprocessor.b", "wb") as f_out:
+            pickle.dump(dict_vectorizer, f_out)
+
+        mlflow.log_artifact("models/preprocessor.b", artifact_path="preprocessor")
 
         mlflow.xgboost.log_model(booster, artifact_path="models_mlflow")
 
@@ -229,6 +234,8 @@ def pipeline_flow():
         dictionary_vectors["train"],
         dictionary_vectors["valid"],
         dictionary_vectors["y_val"],
+        dictionary_vectors["dict_vectorizer"]
+
     )
     move_latest_model_to_registry(experiment_id, mlflow_run_id)
 
