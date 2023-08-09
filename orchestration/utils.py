@@ -5,7 +5,7 @@ import boto3
 from collections import namedtuple
 from urllib.parse import urlparse
 
-from constants import LOCAL_ENDPOINT_URL
+from orchestration import constants
 
 
 logging.basicConfig(
@@ -16,7 +16,7 @@ logging.basicConfig(
 def pull_file_from_s3(bucket, path, local_path, is_environment_local):
     """Pull file from S3 and store it to local path."""
     if is_environment_local:
-        s3_client = boto3.client("s3", endpoint_url=LOCAL_ENDPOINT_URL)
+        s3_client = boto3.client("s3", endpoint_url=constants.LOCAL_ENDPOINT_URL)
     else:
         s3_client = boto3.client("s3")
 
@@ -38,7 +38,7 @@ def get_all_files_from_s3(bucket, prefix, is_environment_local):
     """Get all the files from S3 bucket matching the prefix."""
     filename_list = []
     if is_environment_local:
-        s3_client = boto3.client("s3", endpoint_url=LOCAL_ENDPOINT_URL)
+        s3_client = boto3.client("s3", endpoint_url=constants.LOCAL_ENDPOINT_URL)
     else:
         s3_client = boto3.client(client="s3")
 
