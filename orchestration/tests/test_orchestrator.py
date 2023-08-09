@@ -33,7 +33,7 @@ def test_dictionary_vectorizer_method():
 
 def test_model_pulling_from_s3():
     """Test pulling of latest model from registry."""
-    logged_model = 'runs:/a7f841c99cf7458c84c28800b5d6112e/models_mlflow'
+    logged_model = 'runs:/240ae65d48814f8091d5ce9039928edf/models_mlflow'
 
     client = prediction_orchestrator.prepare_mlflow()
     expected_model = pyfunc.load_model(logged_model)

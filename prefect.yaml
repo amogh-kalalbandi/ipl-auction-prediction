@@ -7,10 +7,10 @@ name: ipl-auction-prediction
 prefect-version: 2.11.0
 
 # build section allows you to manage and build docker images
-build: null
+build:
 
 # push section allows you to manage if and how this project is uploaded to remote locations
-push: null
+push:
 
 # pull section allows you to provide instructions for cloning this project in remote locations
 pull:
@@ -21,13 +21,13 @@ pull:
 # the deployments section allows you to provide configuration for deploying flows
 deployments:
 - name: ipl-auction-training
-  version: null
+  version:
   tags: []
   description: Flow of the pipeline
   entrypoint: orchestration/training_orchestrator.py:pipeline_flow
   parameters: {}
   work_pool:
     name: job-pool
-    work_queue_name: null
+    work_queue_name:
     job_variables: {}
-  schedule: null
+  schedule:

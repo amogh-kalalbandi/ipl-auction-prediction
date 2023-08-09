@@ -5,7 +5,7 @@ import boto3
 from collections import namedtuple
 from urllib.parse import urlparse
 
-from constants import LOCAL_ENDPOINT_URL
+from orchestration.constants import LOCAL_ENDPOINT_URL
 
 
 logging.basicConfig(
@@ -26,7 +26,7 @@ def pull_file_from_s3(bucket, path, local_path, is_environment_local):
 
 
 def resolve_s3_location(s3_path):
-    """Resolve S3 path to bucket and file_key"""
+    """Resolve S3 path to bucket and file_key."""
     s3locobj = namedtuple("s3_location", ["bucket", "file_key"])
     s3_res = urlparse(s3_path)
     s3loc = s3locobj(s3_res.netloc, s3_res.path[1:] if s3_res.netloc else s3_res.path)

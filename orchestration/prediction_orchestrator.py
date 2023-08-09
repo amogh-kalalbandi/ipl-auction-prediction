@@ -1,4 +1,5 @@
 """Prefect Prediction pipeline."""
+import pickle
 import pandas as pd
 import xgboost as xgb
 from mlflow import xgboost, MlflowClient, set_tracking_uri
@@ -109,11 +110,14 @@ def predict_auction_amount(filename_list, booster):
     ]
 
     print(prediction_df.shape)
-    # import ipdb; ipdb.set_trace()
 
-    dictionary_vector = DictVectorizer()
+    # dictionary_vector = DictVectorizer()
+    dictionary_vector = None
+    with open('preprocessor/preprocessor.b', 'rb') as f_in:
+        dictionary_vector = pickle.load(f_in)
+
     pred_dicts = prediction_df[categorical + numerical].to_dict(orient='records')
-    X_test = dictionary_vector.fit_transform(pred_dicts)  # pylint: disable=invalid-name
+    X_test = dictionary_vector.transform(pred_dicts)  # pylint: disable=invalid-name
 
     prediction_matrix = xgb.DMatrix(X_test)
     predictions = booster.predict(prediction_matrix)

@@ -14,6 +14,9 @@ pyarrow = "*"
 s3fs = "*"
 hyperopt = "*"
 xgboost = "*"
+awscli = "*"
+localstack = "*"
+awscli-local = "*"
 
 [dev-packages]
 pytest = "*"
