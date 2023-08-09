@@ -11,7 +11,7 @@ from sklearn.feature_extraction import DictVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 
-from orchestration.utils import (  # pylint: disable=import-error
+from orchestration.utils import (
     pull_file_from_s3,
     resolve_s3_location,
     get_all_files_from_s3,
@@ -19,7 +19,7 @@ from orchestration.utils import (  # pylint: disable=import-error
 
 from prefect import variables, flow, task
 
-from orchestration.constants import (  # pylint: disable=import-error
+from orchestration.constants import (
     MLFLOW_EXPERIMENT_NAME,
     MLFLOW_TRACKING_URI,
     MLFLOW_MODEL_NAME,
