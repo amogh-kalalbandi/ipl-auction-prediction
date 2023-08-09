@@ -166,3 +166,6 @@ ipl-player-auction-eda/mlflow.db
 mlartifacts/
 mlflow.db
 orchestration/mlruns/
+orchestration/auction_result_data.csv
+orchestration/preprocessor/
+preprocessor/

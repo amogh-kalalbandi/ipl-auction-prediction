@@ -8,7 +8,6 @@ import mlflow
 from mlflow import xgboost, MlflowClient, set_tracking_uri
 from prefect import variables, flow, task
 
-from sklearn.feature_extraction import DictVectorizer
 from sklearn.metrics import mean_squared_error
 
 from utils import (  # pylint: disable=import-error
@@ -30,7 +29,7 @@ pd.set_option('display.float_format', lambda x: '%.5f' % x)  # pylint: disable=c
 def prepare_mlflow():
     """Setup MLFlow with experiment and tracking URL."""
     set_tracking_uri(MLFLOW_TRACKING_URI)
-    experiment = mlflow.set_experiment(MLFLOW_PREDICTION_EXPERIMENT_NAME)
+    mlflow.set_experiment(MLFLOW_PREDICTION_EXPERIMENT_NAME)
     client = MlflowClient()
     return client
 

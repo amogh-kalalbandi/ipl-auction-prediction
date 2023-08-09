@@ -1,0 +1,13 @@
+[tool.pylint."MESSAGES CONTROL"]
+
+max-line-length = 120
+disable = """
+    line-too-long,
+    logging-fstring-interpolation,
+    wrong-import-order,
+    ungrouped-imports,
+    too-few-public-methods,
+    import-error,
+    f-string-without-interpolation,
+    too-many-locals
+"""
