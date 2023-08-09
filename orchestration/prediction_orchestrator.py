@@ -77,6 +77,13 @@ def pull_prediction_data_from_s3():
         print(f'training_file_local_path = {training_file_local_path}')
         print(f'is_environment_local = {is_environment_local}')
 
+        tmp_path = os.path.join(os.getcwd(), 'tmp')
+        is_directory_exists = os.path.exists(tmp_path, 'prediction_data')
+        if not is_directory_exists:
+            print(f'Directory not found. Creating one.')
+            prediction_path = os.path.join(tmp_path, 'prediction_data')
+            os.makedirs(prediction_path)
+
         pull_file_from_s3(
             s3_tuple.bucket,
             s3_filename_list[0],
@@ -134,7 +141,7 @@ def predict_auction_amount(filename_list, booster):
         prediction_matrix = xgb.DMatrix(X_test)
         predictions = booster.predict(prediction_matrix)
 
-        auction_result_df = pd.read_csv('../data/actual_auction_amount_data.csv')
+        auction_result_df = pd.read_csv('data/actual_auction_amount_data.csv')
         auction_result_df['predicted_auction_amount'] = predictions
         auction_result_df['predicted_auction_amount'] = auction_result_df['predicted_auction_amount'] * 10000000
         auction_result_df.fillna(0, inplace=True)
