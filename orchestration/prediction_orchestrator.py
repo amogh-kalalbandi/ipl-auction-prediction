@@ -78,7 +78,7 @@ def pull_prediction_data_from_s3():
         print(f'is_environment_local = {is_environment_local}')
 
         tmp_path = os.path.join(os.getcwd(), 'tmp')
-        is_directory_exists = os.path.exists(tmp_path, 'prediction_data')
+        is_directory_exists = os.path.exists(os.path.join(tmp_path, 'prediction_data'))
         if not is_directory_exists:
             print(f'Directory not found. Creating one.')
             prediction_path = os.path.join(tmp_path, 'prediction_data')
