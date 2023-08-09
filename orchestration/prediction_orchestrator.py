@@ -73,13 +73,14 @@ def pull_prediction_data_from_s3():
     local_filename_list = []
     print(f'Filename list in S3 bucket = {s3_filename_list}')
     if s3_filename_list:
-        training_file_local_path = s3_filename_list[0]
+        training_file_local_path = f'tmp/{s3_filename_list[0]}'
         print(f'training_file_local_path = {training_file_local_path}')
         print(f'is_environment_local = {is_environment_local}')
-        list_dir = os.listdir()
-        currect_directory = os.getcwd()
-        print(f'listing directory = {list_dir}')
-        print(f'current directory = {currect_directory}')
+
+        is_directory_exists = os.path.exists(os.path.join(os.getcwd(), 'tmp'))
+        if not is_directory_exists:
+            os.makedirs(os.path.join(os.getcwd(), 'tmp'))
+
         pull_file_from_s3(
             s3_tuple.bucket,
             s3_filename_list[0],
