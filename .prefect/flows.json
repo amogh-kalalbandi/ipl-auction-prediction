@@ -1,3 +1,4 @@
 {
-  "pipeline-flow": "orchestration/training_orchestrator.py:pipeline_flow"
+  "pipeline-flow": "orchestration/training_orchestrator.py:pipeline_flow",
+  "prediction-flow": "orchestration/prediction_orchestrator.py:prediction_flow"
 }

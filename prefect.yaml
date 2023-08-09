@@ -31,3 +31,14 @@ deployments:
     work_queue_name:
     job_variables: {}
   schedule:
+- name: ipl-auction-prediction
+  version:
+  tags: []
+  description: Flow of prediction pipeline.
+  entrypoint: orchestration/prediction_orchestrator.py:prediction_flow
+  parameters: {}
+  work_pool:
+    name: job-pool
+    work_queue_name:
+    job_variables: {}
+  schedule:

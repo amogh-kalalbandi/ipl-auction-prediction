@@ -17,6 +17,7 @@
 
     -- prefect deploy command
 
+    prefect deploy -n ipl-auction-training
     prefect deploy -n ipl-auction-prediction
 
 ```

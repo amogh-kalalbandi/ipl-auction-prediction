@@ -5,7 +5,7 @@ import boto3
 from collections import namedtuple
 from urllib.parse import urlparse
 
-from orchestration.constants import LOCAL_ENDPOINT_URL
+from constants import LOCAL_ENDPOINT_URL
 
 
 logging.basicConfig(

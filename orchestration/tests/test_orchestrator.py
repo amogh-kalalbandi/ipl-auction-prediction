@@ -1,5 +1,5 @@
 """Unit test file for orchestrator."""
-from mlflow import pyfunc
+from mlflow import xgboost
 
 from orchestration import training_orchestrator
 from orchestration import prediction_orchestrator
@@ -36,10 +36,10 @@ def test_model_pulling_from_s3():
     logged_model = 'runs:/240ae65d48814f8091d5ce9039928edf/models_mlflow'
 
     client = prediction_orchestrator.prepare_mlflow()
-    expected_model = pyfunc.load_model(logged_model)
+    expected_model = xgboost.load_model(logged_model)
     actual_model = prediction_orchestrator.get_model_from_mlflow_registry(client)
 
-    assert expected_model.metadata.run_id == actual_model.metadata.run_id
+    assert expected_model.attributes()['best_score'] == actual_model.attributes()['best_score']
 
 
 def test_pull_prediction_data_from_s3():
