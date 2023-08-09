@@ -1,7 +1,7 @@
 """Prefect Prediction pipeline."""
 import pandas as pd
 import xgboost as xgb
-from mlflow import pyfunc, MlflowClient, set_tracking_uri
+from mlflow import xgboost, MlflowClient, set_tracking_uri
 
 from prefect import variables
 
@@ -37,7 +37,7 @@ def get_model_from_mlflow_registry(mlflow_client):
         for each_model in each_registry.latest_versions:
             if each_model.current_stage == StatusEnum.PRODUCTION:
                 model_run_id = each_model.run_id
-                model = pyfunc.load_model(f"runs:/{model_run_id}/models_mlflow")
+                model = xgboost.load_model(f"runs:/{model_run_id}/models_mlflow")
 
     mlflow_client.download_artifacts(run_id=model_run_id, path='preprocessor', dst_path='.')
 
