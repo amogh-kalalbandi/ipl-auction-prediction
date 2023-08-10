@@ -40,7 +40,7 @@ def get_all_files_from_s3(bucket, prefix, is_environment_local):
     if is_environment_local:
         s3_client = boto3.client("s3", endpoint_url=constants.LOCAL_ENDPOINT_URL)
     else:
-        s3_client = boto3.client(client="s3")
+        s3_client = boto3.client("s3")
 
     logging.info(f"List all files from S3 = {bucket} with prefix = {prefix}")
     response = s3_client.list_objects_v2(Bucket=bucket, Prefix=prefix)
