@@ -71,9 +71,10 @@ def get_input_files_from_s3():
         for each_key in s3_filename_list:
             # Getting the year from s3 file
             each_filename = each_key.split("/")[1]
-            year_value = int(each_filename.split(".")[0].split("_")[2])
-            if year_value >= pull_from_year:
-                filename_list.append(each_key)
+            if each_filename:
+                year_value = int(each_filename.split(".")[0].split("_")[2])
+                if year_value >= pull_from_year:
+                    filename_list.append(each_key)
 
     # Pull each file from S3 bucket.
     for each_file in filename_list:
