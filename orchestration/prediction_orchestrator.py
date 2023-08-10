@@ -58,7 +58,7 @@ def pull_prediction_data_from_s3():
         default="s3://mlflow-artifacts-remote-amogh/prediction_data/"
     )
     prefix = 'prediction_data'
-    is_environment_local = bool(variables.get("IS_ENVIRONMENT_LOCAL", default="true"))
+    is_environment_local = bool(variables.get("IS_ENVIRONMENT_LOCAL"))
 
     s3_tuple = resolve_s3_location(s3_path)
 

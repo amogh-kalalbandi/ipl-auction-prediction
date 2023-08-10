@@ -48,9 +48,10 @@ def get_input_files_from_s3():
     s3_path = variables.get(
         "INPUT_S3_PATH", default="s3://mlflow-artifacts-remote-amogh/training_data/"
     )
-    is_environment_local = bool(variables.get("IS_ENVIRONMENT_LOCAL", default="true"))
+    is_environment_local = bool(variables.get("IS_ENVIRONMENT_LOCAL"))
     prefix = "training_data"
     local_filename_list = []
+    print(f'Is environment local = {is_environment_local}')
 
     s3_tuple = resolve_s3_location(s3_path)
 
