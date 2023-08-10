@@ -42,9 +42,10 @@ def get_all_files_from_s3(bucket, prefix, is_environment_local):
     else:
         s3_client = boto3.client("s3")
 
-    logging.info(f"List all files from S3 = {bucket} with prefix = {prefix}")
+    print(f"List all files from S3 = {bucket} with prefix = {prefix}")
     response = s3_client.list_objects_v2(Bucket=bucket, Prefix=prefix)
 
+    print(f'response.get = {response}')
     for each_object in response["Contents"]:
         filename_list.append(each_object["Key"])
 
