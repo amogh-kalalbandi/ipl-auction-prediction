@@ -35,6 +35,7 @@ logging.basicConfig(
 @task(log_prints=True, name="Prepare MLflow client")
 def prepare_mlflow():
     """Setup MLFlow with experiment and tracking URL."""
+    print(f'mlflow tracking url = {MLFLOW_TRACKING_URI}')
     mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
     experiment = mlflow.set_experiment(MLFLOW_EXPERIMENT_NAME)
     return experiment.experiment_id
