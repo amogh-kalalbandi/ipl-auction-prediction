@@ -1,0 +1,37 @@
+version: '3.7'
+
+services:
+
+  prefect_server:
+    build: .
+    ports:
+      - 4200:4200
+    env_file:
+      - orchestration/.env
+    environment:
+      - PREFECT_ORION_API_HOST=0.0.0.0
+    entrypoint: ["prefect", "server", "start"]
+
+  mlflow_client:
+    build: .
+    ports:
+      - 5000:5000
+    env_file:
+      - orchestration/.env
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        mlflow server --backend-store-uri=sqlite:///mlflow.db --default-artifact-root=s3://mlflow-artifacts-remote-amogh/auction-prediction-experiment/ --host 0.0.0.0
+
+  prefect_worker:
+    build: .
+    env_file:
+      - orchestration/.env
+    environment:
+      - PREFECT_ORION_API_HOST=0.0.0.0
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        sleep 10
+        prefect config set PREFECT_API_URL=http://host.docker.internal:4200/api
+        prefect worker start -p "job-pool" --type "process"
