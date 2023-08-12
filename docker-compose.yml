@@ -21,7 +21,7 @@ services:
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
-        mlflow server --backend-store-uri=sqlite:///mlflow.db --default-artifact-root=s3://mlflow-artifacts-remote-amogh/auction-prediction-experiment/ --host 0.0.0.0
+        mlflow server --backend-store-uri=sqlite:///mlflow.db --default-artifact-root=s3://player-auction-data-ipl-auction-prediction/ --host 0.0.0.0
 
   prefect_worker:
     build: .
@@ -32,6 +32,6 @@ services:
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
-        sleep 10
+        sleep 20
         prefect config set PREFECT_API_URL=http://host.docker.internal:4200/api
         prefect worker start -p "job-pool" --type "process"

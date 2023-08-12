@@ -23,4 +23,8 @@
 
         mlflow server --backend-store-uri=sqlite:///mlflow.db --default-artifact-root=s3://mlflow-artifacts-remote-amogh/auction-prediction-experiment/ --host 0.0.0.0
 
+    - s3 bucket name for artifact saving
+
+        player-auction-data
+
 ```

@@ -171,3 +171,4 @@ orchestration/preprocessor/
 preprocessor/
 tmp/prediction_data/
 auction_result_data.csv
+infrastructure/.terraform/
