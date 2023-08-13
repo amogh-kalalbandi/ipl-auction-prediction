@@ -183,21 +183,9 @@ def check_auction_prediction_percentage_and_alert(mlflow_client, run_id):
     else:
         auction_percentage = 0.30
 
-    context = get_run_context()
     print(f'Checking auction prediction percentage value = {auction_percentage}')
 
-    if auction_percentage < 0.40:
-        email_server_credentials = EmailServerCredentials.load("gmail-server-notification-creds")
-        task_run_name = context.task.task_run_name
-        email_send_message(
-            email_server_credentials=email_server_credentials,
-            subject=f"Flow run {task_run_name} violated the auction percentage",
-            msg=f"""
-                Flow run {task_run_name} violated the auction percentage value.
-                The percentage recorded = {auction_percentage}
-            """,
-            email_to=email_server_credentials.username,
-        )
+    return auction_percentage
 
 
 @flow
@@ -208,7 +196,22 @@ def prediction_flow():
     booster = get_model_from_mlflow_registry(mlflow_client)
     filename_list = pull_prediction_data_from_s3()
     _ , run_id = predict_auction_amount(filename_list, booster)
-    check_auction_prediction_percentage_and_alert(mlflow_client, run_id)
+    auction_percentage = check_auction_prediction_percentage_and_alert(mlflow_client, run_id)
+    context = get_run_context()
+
+    # Check if auction percentage is less than 40.
+    if auction_percentage < 0.40:
+        email_server_credentials = EmailServerCredentials.load("gmail-server-notification-creds")
+        flow_run_name = context.flow_run.name
+        email_send_message(
+            email_server_credentials=email_server_credentials,
+            subject=f"Flow run {flow_run_name} violated the auction percentage",
+            msg=f"""
+                Flow run {flow_run_name} violated the auction percentage value.
+                The percentage recorded = {auction_percentage}
+            """,
+            email_to=email_server_credentials.username,
+        )
 
 
 if __name__ == '__main__':
