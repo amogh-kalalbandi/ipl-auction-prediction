@@ -155,6 +155,12 @@ def predict_auction_amount(filename_list, booster):
 
         mlflow.log_metric("rmse", rmse)
 
+        result_df = pd.read_csv('auction_result_data.csv')
+        right_approx_result_list = list(result_df['prediction_result'].value_counts())
+        auction_prediction_percentage = round((right_approx_result_list[0] / result_df.shape[0]), 3)
+
+        mlflow.log_metric("auction_prediction_percentage", auction_prediction_percentage)
+
     return auction_result_df
 
 
