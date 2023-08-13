@@ -7,6 +7,8 @@ import mlflow
 
 from mlflow import xgboost, MlflowClient, set_tracking_uri
 from prefect import variables, flow, task
+from prefect_email import EmailServerCredentials, email_send_message
+from prefect.context import get_run_context
 
 from sklearn.metrics import mean_squared_error
 
@@ -98,7 +100,7 @@ def pull_prediction_data_from_s3():
 def predict_auction_amount(filename_list, booster):
     """Predict auction amount."""
     print(f'filename list = {filename_list}')
-    with mlflow.start_run():
+    with mlflow.start_run() as run:
         prediction_df = pd.DataFrame()
         for each_filename in filename_list:
             temp_df = pd.read_csv(each_filename)
@@ -161,7 +163,41 @@ def predict_auction_amount(filename_list, booster):
 
         mlflow.log_metric("auction_prediction_percentage", auction_prediction_percentage)
 
-    return auction_result_df
+    return (auction_result_df, run.info.run_id)
+
+
+@task(log_prints=True, name="Check prediction prediction value.")
+def check_auction_prediction_percentage_and_alert(mlflow_client, run_id):
+    """Check the prediction percentage metric and send email."""
+    filter_string = f"run_id = '{run_id}'"
+    print(f'filter string = {filter_string}')
+    is_environment_local = bool(variables.get("IS_ENVIRONMENT_LOCAL"))
+
+    # Finding the prediction experiment name
+    experiments = mlflow_client.search_experiments(filter_string=f"name = '{MLFLOW_PREDICTION_EXPERIMENT_NAME}'")
+
+    # Finding the current run
+    if is_environment_local:
+        runs = mlflow_client.search_runs(experiment_ids=experiments[0].experiment_id, filter_string=filter_string)
+        auction_percentage = runs[0].data.metrics['auction_prediction_percentage']
+    else:
+        auction_percentage = 0.30
+
+    context = get_run_context()
+    print(f'Checking auction prediction percentage value = {auction_percentage}')
+
+    if auction_percentage < 0.40:
+        email_server_credentials = EmailServerCredentials.load("gmail-server-notification-creds")
+        flow_run_name = context.flow_run.name
+        email_send_message(
+            email_server_credentials=email_server_credentials,
+            subject=f"Flow run {flow_run_name} violated the auction percentage",
+            msg=f"""
+                Flow run {flow_run_name} violated the auction percentage value.
+                The percentage recorded = {auction_percentage}
+            """,
+            email_to=email_server_credentials.username,
+        )
 
 
 @flow
@@ -171,7 +207,8 @@ def prediction_flow():
     mlflow_client = prepare_mlflow()
     booster = get_model_from_mlflow_registry(mlflow_client)
     filename_list = pull_prediction_data_from_s3()
-    predict_auction_amount(filename_list, booster)
+    _ , run_id = predict_auction_amount(filename_list, booster)
+    check_auction_prediction_percentage_and_alert(mlflow_client, run_id)
 
 
 if __name__ == '__main__':

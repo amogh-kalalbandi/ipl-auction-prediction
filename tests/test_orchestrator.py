@@ -58,7 +58,7 @@ def test_predict_auction_amount():
     actual_filename_list = prediction_orchestrator.pull_prediction_data_from_s3.fn()
     client = prediction_orchestrator.prepare_mlflow.fn()
     actual_model = prediction_orchestrator.get_model_from_mlflow_registry.fn(client)
-    actual_prediction_df = prediction_orchestrator.predict_auction_amount.fn(actual_filename_list, actual_model)
+    actual_prediction_df, _ = prediction_orchestrator.predict_auction_amount.fn(actual_filename_list, actual_model)
 
     expected_rows_in_preds = 173
 

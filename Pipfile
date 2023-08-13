@@ -17,6 +17,7 @@ xgboost = "*"
 awscli = "*"
 localstack = "*"
 awscli-local = "*"
+prefect-email = "==0.2.0"
 
 [dev-packages]
 pytest = "*"
