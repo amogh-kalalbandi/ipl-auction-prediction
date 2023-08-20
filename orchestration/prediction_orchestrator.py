@@ -60,7 +60,7 @@ def pull_prediction_data_from_s3():
         default="s3://mlflow-artifacts-remote-amogh/prediction_data/"
     )
     prefix = 'prediction_data'
-    is_environment_local = bool(variables.get("IS_ENVIRONMENT_LOCAL"))
+    is_environment_local = bool(variables.get("is_environment_local"))
 
     s3_tuple = resolve_s3_location(s3_path)
 
@@ -171,7 +171,7 @@ def check_auction_prediction_percentage_and_alert(mlflow_client, run_id):
     """Check the prediction percentage metric and send email."""
     filter_string = f"run_id = '{run_id}'"
     print(f'filter string = {filter_string}')
-    is_environment_local = bool(variables.get("IS_ENVIRONMENT_LOCAL", default="True"))
+    is_environment_local = bool(variables.get("is_environment_local", default="True"))
 
     # Finding the prediction experiment name
     experiments = mlflow_client.search_experiments(filter_string=f"name = '{MLFLOW_PREDICTION_EXPERIMENT_NAME}'")
